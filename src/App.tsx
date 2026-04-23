@@ -8,6 +8,9 @@ import { Button } from './components/ui/Button';
 
 import { Home as HomeSection, Layers, Briefcase, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { LeadCaptureSection } from './components/sections/LeadCaptureSection';
+import { PagesAdmin } from './components/PagesAdmin';
+import { PageForm } from './components/PageForm';
+import { DynamicPage } from './components/DynamicPage';
 
 // Public Pages
 function Home() {
@@ -197,10 +200,11 @@ export default function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/sobre" element={<section className="section-container py-20"><h1>Sobre Nós</h1></section>} />
-          <Route path="/servicos" element={<section className="section-container py-20"><h1>Serviços</h1></section>} />
+          <Route path="/servicos" element={<section className="section-container py-20"><h1>Serviços</h1></section>} />  
           <Route path="/portfolio" element={<section className="section-container py-20"><h1>Portfólio</h1></section>} />
           <Route path="/blog" element={<section className="section-container py-20"><h1>Blog</h1></section>} />
           <Route path="/contato" element={<section className="section-container py-20"><h1>Contato</h1></section>} />
+          <Route path="/:slug" element={<DynamicPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
 
@@ -211,7 +215,9 @@ export default function App() {
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/crm/leads" element={<div className="admin-card p-8 font-bold">Gestão de Leads (CRM)</div>} />
-          <Route path="/admin/conteudo/paginas" element={<div className="admin-card p-8 font-bold">Gestão de Páginas (CMS)</div>} />
+          <Route path="/admin/conteudo/paginas" element={<PagesAdmin />} />
+          <Route path="/admin/conteudo/paginas/nova" element={<PageForm />} />
+          <Route path="/admin/conteudo/paginas/:id/editar" element={<PageForm />} />
           <Route path="/admin/financeiro/orders" element={<div className="admin-card p-8 font-bold">Financeiro & Pedidos</div>} />
           <Route path="/admin/config/settings" element={<div className="admin-card p-8 font-bold">Configurações do Sistema</div>} />
         </Route>

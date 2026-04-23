@@ -1,4 +1,5 @@
 import { supabase } from '@/src/lib/supabase';
+import type { Page } from '@/src/types';
 
 /**
  * ADMIN QUERIES
@@ -38,4 +39,58 @@ export async function updateLeadStatus(id: string, status: string) {
     
   if (error) throw error;
   return data;
+}
+
+// Page management functions
+export async function getPages() {
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .order('updated_at', { ascending: false });
+  
+  if (error) throw error;
+  return data as Page[];
+}
+
+export async function getPageById(id: string) {
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .eq('id', id)
+    .single();
+  
+  if (error) throw error;
+  return data as Page;
+}
+
+export async function createPage(pageData: Omit<Page, 'id' | 'created_at' | 'updated_at'>) {
+  const { data, error } = await supabase
+    .from('pages')
+    .insert(pageData)
+    .select()
+    .single();
+    
+  if (error) throw error;
+  return data as Page;
+}
+
+export async function updatePage(id: string, pageData: Partial<Omit<Page, 'id' | 'created_at' | 'updated_at'>>) {
+  const { data, error } = await supabase
+    .from('pages')
+    .update(pageData)
+    .eq('id', id)
+    .select()
+    .single();
+    
+  if (error) throw error;
+  return data as Page;
+}
+
+export async function deletePage(id: string) {
+  const { error } = await supabase
+    .from('pages')
+    .delete()
+    .eq('id', id);
+    
+  if (error) throw error;
 }

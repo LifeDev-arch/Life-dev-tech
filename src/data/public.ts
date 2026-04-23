@@ -1,5 +1,5 @@
 import { supabase } from '@/src/lib/supabase';
-import type { Service, Lead, ContentStatus } from '@/src/types';
+import type { Service, Lead, ContentStatus, Page } from '@/src/types';
 
 /**
  * PUBLIC QUERIES
@@ -37,6 +37,18 @@ export async function getPublishedTestimonials() {
 
   if (error) return [];
   return data;
+}
+
+export async function getPublishedPageBySlug(slug: string) {
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
+
+  if (error) return null;
+  return data as Page;
 }
 
 /**

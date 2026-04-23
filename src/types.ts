@@ -37,13 +37,13 @@ export interface Lead {
   metadata?: Record<string, any>;
 }
 
-export interface Order {
+export interface Page {
   id: string;
-  customer_id: string;
-  status: OrderStatus;
-  total_amount: number;
-  currency: string;
-  payment_provider: 'stripe' | 'manual';
-  items: any[];
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  status: ContentStatus;
   created_at: string;
+  updated_at: string;
 }
