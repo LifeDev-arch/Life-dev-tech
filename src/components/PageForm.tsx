@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, ArrowLeft, Eye } from 'lucide-react';
 import { createPage, getPageById, updatePage } from '@/src/data/admin';
-import type { Page } from '@/src/types';
+import type { PageWithContent } from '@/src/types';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 
@@ -14,7 +14,8 @@ export function PageForm() {
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
-    excerpt: '',
+    summary: '',
+    page_type: '',
     content: '',
     status: 'draft' as 'draft' | 'published' | 'archived'
   });
@@ -39,8 +40,9 @@ export function PageForm() {
       setFormData({
         title: page.title,
         slug: page.slug,
-        excerpt: page.excerpt,
-        content: page.content,
+        summary: page.summary,
+        page_type: page.page_type,
+        content: page.content ?? '',
         status: page.status
       });
     } catch (err) {
@@ -66,11 +68,11 @@ export function PageForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent, publish = false) => {
+  const handleSubmit = async (e: React.SyntheticEvent, publish = false) => {
     e.preventDefault();
     
-    if (!formData.title.trim() || !formData.slug.trim()) {
-      setError('Título e slug são obrigatórios');
+    if (!formData.title.trim() || !formData.slug.trim() || !formData.page_type.trim()) {
+      setError('Título, slug e tipo da página são obrigatórios');
       return;
     }
 
@@ -78,15 +80,18 @@ export function PageForm() {
       setSaving(true);
       setError(null);
       
-      const dataToSave = {
-        ...formData,
+      const pageInput = {
+        title: formData.title,
+        slug: formData.slug,
+        summary: formData.summary,
+        page_type: formData.page_type,
         status: publish ? 'published' : formData.status
       };
 
       if (isEditing && id) {
-        await updatePage(id, dataToSave);
+        await updatePage(id, pageInput, formData.content);
       } else {
-        await createPage(dataToSave);
+        await createPage(pageInput, formData.content);
       }
       
       setSuccess(true);
@@ -194,11 +199,21 @@ export function PageForm() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-gray-700">Descrição Curta</label>
+            <label className="text-sm font-bold text-gray-700">Tipo da Página *</label>
             <Input
               type="text"
-              value={formData.excerpt}
-              onChange={(e) => handleInputChange('excerpt', e.target.value)}
+              value={formData.page_type}
+              onChange={(e) => handleInputChange('page_type', e.target.value)}
+              placeholder="ex: landing, service, blog"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-gray-700">Resumo</label>
+            <Input
+              type="text"
+              value={formData.summary}
+              onChange={(e) => handleInputChange('summary', e.target.value)}
               placeholder="Breve descrição da página"
             />
           </div>

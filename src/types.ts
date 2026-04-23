@@ -39,11 +39,35 @@ export interface Lead {
 
 export interface Page {
   id: string;
-  slug: string;
   title: string;
-  excerpt: string;
-  content: string;
+  slug: string;
   status: ContentStatus;
+  page_type: string;
+  summary: string;
+  created_by?: string | null;
+  updated_by?: string | null;
+  published_at?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface PageBlock {
+  id: string;
+  page_id: string;
+  block_key: string;
+  block_type: string;
+  status: ContentStatus;
+  sort_order: number;
+  data: {
+    content?: string;
+    [key: string]: any;
+  };
+  created_by?: string | null;
+  updated_by?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PageWithContent extends Page {
+  content?: string;
 }

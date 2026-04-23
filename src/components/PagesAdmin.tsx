@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Edit, Archive, Eye, MoreHorizontal } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Edit, Eye, MoreHorizontal } from 'lucide-react';
 import { getPages, updatePage, deletePage } from '@/src/data/admin';
 import type { Page } from '@/src/types';
 import { Button } from './ui/Button';
@@ -160,7 +160,7 @@ export function PagesAdmin() {
                   <tr key={page.id} className="border-b border-surface-low hover:bg-surface-low/50">
                     <td className="p-4">
                       <div className="font-medium">{page.title}</div>
-                      <div className="text-sm text-gray-500 truncate max-w-xs">{page.excerpt}</div>
+                      <div className="text-sm text-gray-500 truncate max-w-xs">{page.summary}</div>
                     </td>
                     <td className="p-4 text-sm text-gray-600">/{page.slug}</td>
                     <td className="p-4">

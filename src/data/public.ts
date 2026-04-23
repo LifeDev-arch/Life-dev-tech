@@ -1,5 +1,5 @@
 import { supabase } from '@/src/lib/supabase';
-import type { Service, Lead, ContentStatus, Page } from '@/src/types';
+import type { Service, Lead, Page, PageWithContent } from '@/src/types';
 
 /**
  * PUBLIC QUERIES
@@ -40,15 +40,26 @@ export async function getPublishedTestimonials() {
 }
 
 export async function getPublishedPageBySlug(slug: string) {
-  const { data, error } = await supabase
+  const { data: pageData, error: pageError } = await supabase
     .from('pages')
-    .select('*')
+    .select('id, title, slug, status, page_type, summary, published_at, created_at, updated_at')
     .eq('slug', slug)
     .eq('status', 'published')
     .single();
 
-  if (error) return null;
-  return data as Page;
+  if (pageError || !pageData) return null;
+
+  const { data: block } = await supabase
+    .from('page_blocks')
+    .select('data')
+    .eq('page_id', pageData.id)
+    .eq('block_key', 'main_content')
+    .maybeSingle();
+
+  return {
+    ...pageData,
+    content: block?.data?.content ?? ''
+  } as PageWithContent;
 }
 
 /**

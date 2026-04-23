@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPublishedPageBySlug } from '@/src/data/public';
-import type { Page } from '@/src/types';
+import type { PageWithContent } from '@/src/types';
 
 export function DynamicPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [page, setPage] = useState<Page | null>(null);
+  const [page, setPage] = useState<PageWithContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -59,14 +59,14 @@ export function DynamicPage() {
       <article className="max-w-4xl mx-auto">
         <header className="mb-8">
           <h1 className="text-4xl font-bold mb-4">{page.title}</h1>
-          {page.excerpt && (
-            <p className="text-xl text-gray-600">{page.excerpt}</p>
+          {page.summary && (
+            <p className="text-xl text-gray-600">{page.summary}</p>
           )}
         </header>
         
         <div 
           className="prose prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: page.content }}
+          dangerouslySetInnerHTML={{ __html: page.content ?? '' }}
         />
       </article>
     </div>
